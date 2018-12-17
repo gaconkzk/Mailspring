@@ -14,7 +14,8 @@ import DatabaseStore from './stores/database-store';
 import OnlineStatusStore from './stores/online-status-store';
 import DatabaseChangeRecord from './stores/database-change-record';
 import DatabaseObjectRegistry from '../registries/database-object-registry';
-import MailsyncProcess from '../mailsync-process';
+// FR# import MailsyncProcess from '../mailsync-process';
+import MockMailsyncProcess from '../mock-mailsync-process';
 import KeyManager from '../key-manager';
 import Actions from './actions';
 import Utils from './models/utils';
@@ -221,7 +222,7 @@ export default class MailsyncBridge {
 
     // no-op - do not allow us to kill this client - we may be reseting the cache of an
     // account which does not exist anymore, but we don't want to interrupt this process
-    resetClient.kill = () => {};
+    resetClient.kill = () => { };
 
     this._clients[account.id] = resetClient;
 

@@ -233,7 +233,7 @@ const handleStartupEventWithSquirrel = () => {
 };
 
 const start = () => {
-  app.setAppUserModelId('com.squirrel.mailspring.mailspring');
+  app.setAppUserModelId('org.theflies.flymails');
   if (handleStartupEventWithSquirrel()) {
     return;
   }

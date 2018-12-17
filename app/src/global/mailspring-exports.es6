@@ -57,7 +57,8 @@ lazyLoad(`Actions`, 'flux/actions');
 
 // API Endpoints
 lazyLoad(`MailspringAPIRequest`, 'flux/mailspring-api-request');
-lazyLoad(`MailsyncProcess`, 'mailsync-process');
+// FR# lazyLoad(`MailsyncProcess`, 'mailsync-process');
+lazyLoad(`MockMailsyncProcess`, 'mock-mailsync-process');
 // The Database
 lazyLoad(`Matcher`, 'flux/attributes/matcher');
 lazyLoad(`DatabaseStore`, 'flux/stores/database-store');
