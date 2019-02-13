@@ -1,5 +1,6 @@
 use std::env;
 use serde_json::json;
+use serde::{ Serialize, Deserialize };
 use std::io::stdin;
 use std::io::stdout;
 use std::io::{ Write, Read };
@@ -7,10 +8,14 @@ use std::io::Error;
 use clap::{ Arg, App, SubCommand };
 use clap::{ crate_authors, crate_description, crate_version };
 
+#[derive(Serialize, Deserialize)]
 struct SyncModel {
-    m: String,
-    string: String,
-    class: String,
+    #[serde(rename = "type")]
+    model_type: String,
+    #[serde(rename = "modelJSONs")]
+    model_json: Vec<String>,
+    #[serde(rename = "modelClass")]
+    model_class: String,
 }
 
 fn main() {
