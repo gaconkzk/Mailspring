@@ -48,7 +48,7 @@ export default class AutoUpdateManager extends EventEmitter {
 
     this.feedURL = `https://${host}/check/${params.platform}/${params.arch}/${params.version}/${
       params.id
-    }/${params.channel}`;
+      }/${params.channel}`;
     if (autoUpdater) {
       autoUpdater.setFeedURL(this.feedURL);
     }
@@ -97,17 +97,19 @@ export default class AutoUpdateManager extends EventEmitter {
       return;
     }
 
+    // FR# Temporary disable auto update
     //check immediately at startup
-    this.check({ hidePopups: true });
+    // this.check({ hidePopups: true });
 
+    // FR# Temporary disable auto update
     //check every 30 minutes
-    setInterval(() => {
-      if ([UpdateAvailableState, UnsupportedState].includes(this.state)) {
-        console.log('Skipping update check... update ready to install, or updater unavailable.');
-        return;
-      }
-      this.check({ hidePopups: true });
-    }, 1000 * 60 * 30);
+    // setInterval(() => {
+    //   if ([UpdateAvailableState, UnsupportedState].includes(this.state)) {
+    //     console.log('Skipping update check... update ready to install, or updater unavailable.');
+    //     return;
+    //   }
+    //   this.check({ hidePopups: true });
+    // }, 1000 * 60 * 30);
   }
 
   emitUpdateAvailableEvent() {

@@ -1,18 +1,50 @@
 use std::env;
-use serde_json;
+use serde_json::json;
 use std::io::stdin;
 use std::io::stdout;
 use std::io::{ Write, Read };
+use std::io::Error;
+use clap::{ Arg, App, SubCommand };
+use clap::{ crate_authors, crate_description, crate_version };
+
+struct SyncModel {
+    m: String,
+    string: String,
+    class: String,
+}
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    println!("{:?}", args);
-    loop {
-        let mut input = String::new();
-        stdin().read_line(&mut input).unwrap();
-        let command = input.trim();
-        println!("{}", command);
-    }
+    let matches = App::new("Mega Mail Sync")
+        .version(crate_version!())
+        .author(crate_authors!("\n"))
+        .about(crate_description!())
+        .arg(Arg::with_name("mode")
+            .long("mode")
+            .value_name("MODE")
+            .help("startup mode")
+            .takes_value(true)
+            .required(true)
+        )
+        .arg(Arg::with_name("info")
+            .long("info")
+            .value_name("ACCOUNT_INFO")
+            .help("the account email")
+            .takes_value(true)
+        )
+        .get_matches();
+    let mode = matches.value_of("mode").expect("Crazy bug!!!");
+    let account = matches.value_of("info").unwrap_or("unknown@unknown");
 
-    print!("{}", serde_json::json!([ "Quitted" ]).to_string());
+    match mode {
+        "migrate" => print!("{}",
+                              json!({
+                              "mode": mode,
+                              }).to_string()),
+        "sync" => print!("{}",
+                              json!({
+                              "mode": mode,
+                              "account": account,
+                              }).to_string()),
+        other => print!("{}", json!({"msg": "Unknown mode"}).to_string()),
+    };
 }

@@ -1,8 +1,10 @@
 [package]
 name = "mmailsync"
 version = "0.1.0"
+description = "Syncing mail for Mailspring client"
 authors = ["gaconkzk <gaconkzk@gmail.com>"]
 edition = "2018"
 
 [dependencies]
 serde_json = "^1.0.0"
+clap = "^2.31.2"
