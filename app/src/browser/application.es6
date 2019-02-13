@@ -20,7 +20,8 @@ import DefaultClientHelper from '../default-client-helper';
 import MailspringProtocolHandler from './mailspring-protocol-handler';
 import ConfigPersistenceManager from './config-persistence-manager';
 import moveToApplications from './move-to-applications';
-// FR# import MailsyncProcess from '../mailsync-process';
+// FR#
+// import MailsyncProcess from '../mailsync-process';
 import MockMailsyncProcess from '../mock-mailsync-process';
 
 let clipboard = null;
@@ -49,7 +50,8 @@ export default class Application extends EventEmitter {
     });
 
     try {
-      // FR#1: const mailsync = new MailsyncProcess(options);
+      // FR#1:
+      // const mailsync = new MailsyncProcess(options);
       const mailsync = new MockMailsyncProcess(options);
       await mailsync.migrate();
     } catch (err) {
@@ -81,7 +83,6 @@ export default class Application extends EventEmitter {
       }
       return;
     }
-
     const Config = require('../config');
     const config = new Config();
     this.config = config;

@@ -229,6 +229,7 @@ export default class MailsyncProcess extends EventEmitter {
   }
 
   sync() {
+    console.log('syncing');
     this._spawnProcess('sync');
     let outBuffer = '';
     let errBuffer = null;
