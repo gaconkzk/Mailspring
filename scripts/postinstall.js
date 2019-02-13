@@ -25,10 +25,10 @@ function npm(cmd, options) {
   const { cwd, env } = Object.assign({ cwd: '.', env: 'system' }, options);
 
   return new Promise((resolve, reject) => {
-    console.log(`\n-- Running npm ${cmd} in ${cwd} with ${env} config --`);
+    console.log(`\n-- Running yarn ${cmd} in ${cwd} with ${env} config --`);
 
     safeExec(
-      `npm ${cmd}`,
+      `yarn ${cmd}`,
       {
         cwd: path.resolve(__dirname, '..', cwd),
         env: npmEnvs[env],
@@ -109,21 +109,18 @@ if (cacheElectronTarget !== npmElectronTarget) {
   rimraf.sync(appModulesPath);
 }
 
-// run `npm install` in ./app with Electron NPM config
+// run `yarn install` in ./app with Electron NPM config
 npm('install', { cwd: './app', env: 'electron' }).then(() => {
-  // run `npm dedupe` in ./app with Electron NPM config
-  npm('dedupe', { cwd: './app', env: 'electron' }).then(() => {
-    // run `npm ls` in ./app - detects missing peer dependencies, etc.
-    npm('ls', { cwd: './app', env: 'electron' }).then(() => {
-      // write the marker with the electron version
-      fs.writeFileSync(cacheVersionPath, npmElectronTarget);
+  // run `yarn list` in ./app - detects missing peer dependencies, etc.
+  npm('list', { cwd: './app', env: 'electron' }).then(() => {
+    // write the marker with the electron version
+    fs.writeFileSync(cacheVersionPath, npmElectronTarget);
 
-      // if the user hasn't cloned the private mailsync module, download
-      // the binary for their operating system that was shipped to S3.
-      if (!fs.existsSync('./mailsync/build.sh')) {
-        console.log(`\n-- Downloading the last released version of Mailspring mailsync --`);
-        downloadMailsync();
-      }
-    });
+    // if the user hasn't cloned the private mailsync module, download
+    // the binary for their operating system that was shipped to S3.
+    if (!fs.existsSync('./mailsync/build.sh')) {
+      console.log(`\n-- Downloading the last released version of Mailspring mailsync --`);
+      downloadMailsync();
+    }
   });
 });

@@ -9,8 +9,7 @@
     "url": "git+https://github.com/Foundry376/Mailspring.git"
   },
   "engines": {
-    "node": "6.9.x",
-    "npm": "3.10.x"
+    "node": "10.x"
   },
   "devDependencies": {
     "babel-cli": "6.x.x",
