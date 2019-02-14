@@ -7,6 +7,7 @@ use std::io::{ Write, Read };
 use std::io::Error;
 use clap::{ Arg, App, SubCommand };
 use clap::{ crate_authors, crate_description, crate_version };
+use mmailsync::core::MMailSync;
 
 #[derive(Serialize, Deserialize)]
 struct SyncModel {
@@ -37,19 +38,21 @@ fn main() {
             .takes_value(true)
         )
         .get_matches();
+
     let mode = matches.value_of("mode").expect("Crazy bug!!!");
     let account = matches.value_of("info").unwrap_or("unknown@unknown");
+
+    let null:Option<Error> = None;
 
     match mode {
         "migrate" => print!("{}",
                               json!({
-                              "mode": mode,
+                              "error": null,
                               }).to_string()),
-        "sync" => print!("{}",
-                              json!({
-                              "mode": mode,
-                              "account": account,
-                              }).to_string()),
+        "sync" => {
+            let mut ms = MMailSync::new();
+            ms.start(account);
+        },
         other => print!("{}", json!({"msg": "Unknown mode"}).to_string()),
     };
 }

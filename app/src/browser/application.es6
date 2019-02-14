@@ -22,7 +22,7 @@ import ConfigPersistenceManager from './config-persistence-manager';
 import moveToApplications from './move-to-applications';
 // FR#
 // import MailsyncProcess from '../mailsync-process';
-import MockMailsyncProcess from '../mock-mailsync-process';
+import MailsyncProcess from '../mock-mailsync-process';
 
 let clipboard = null;
 
@@ -51,8 +51,7 @@ export default class Application extends EventEmitter {
 
     try {
       // FR#1:
-      // const mailsync = new MailsyncProcess(options);
-      const mailsync = new MockMailsyncProcess(options);
+      const mailsync = new MailsyncProcess(options);
       await mailsync.migrate();
     } catch (err) {
       let message = null;

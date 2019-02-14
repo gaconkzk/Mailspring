@@ -14,8 +14,9 @@ import DatabaseStore from './stores/database-store';
 import OnlineStatusStore from './stores/online-status-store';
 import DatabaseChangeRecord from './stores/database-change-record';
 import DatabaseObjectRegistry from '../registries/database-object-registry';
-// FR# import MailsyncProcess from '../mailsync-process';
-import MockMailsyncProcess from '../mock-mailsync-process';
+// FR#
+// import MailsyncProcess from '../mailsync-process';
+import MailsyncProcess from '../mock-mailsync-process';
 import KeyManager from '../key-manager';
 import Actions from './actions';
 import Utils from './models/utils';
@@ -216,7 +217,7 @@ export default class MailsyncBridge {
     const syncingClient = this._clients[account.id];
 
     // create a new client that will perform the reset
-    const resetClient = new MockMailsyncProcess(this._getClientConfiguration());
+    const resetClient = new MailsyncProcess(this._getClientConfiguration());
     resetClient.account = (await KeyManager.insertAccountSecrets(account)).toJSON();
     resetClient.identity = IdentityStore.identity();
 
@@ -283,7 +284,7 @@ export default class MailsyncBridge {
   }
 
   async _launchClient(account, { force } = {}) {
-    const client = new MockMailsyncProcess(this._getClientConfiguration());
+    const client = new MailsyncProcess(this._getClientConfiguration());
     this._clients[account.id] = client; // set this synchornously so we never spawn two
 
     const fullAccountJSON = (await KeyManager.insertAccountSecrets(account)).toJSON();

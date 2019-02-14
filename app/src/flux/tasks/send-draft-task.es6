@@ -6,7 +6,8 @@ import Attributes from '../attributes';
 import Message from '../models/message';
 import SoundRegistry from '../../registries/sound-registry';
 import { Composer as ComposerExtensionRegistry } from '../../registries/extension-registry';
-// FR# import { LocalizedErrorStrings } from '../../mailsync-process';
+// FR#
+// import { LocalizedErrorStrings } from '../../mailsync-process';
 import { LocalizedErrorStrings } from '../../mock-mailsync-process';
 import { localized } from '../../intl';
 
