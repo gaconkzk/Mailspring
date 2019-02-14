@@ -41,7 +41,7 @@ impl MMailSync {
             Value::String(className) => {
                 // store the acc
                 let acc = Account {
-                    id : "test",
+                    id : String::from("test"),
                 };
                 println!("do something with {}", className);
                 stdout().flush();

@@ -1,3 +1,3 @@
 pub struct Account {
-    id: String,
+    pub id: String,
 }
