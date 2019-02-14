@@ -126,6 +126,8 @@ export default class MailsyncBridge {
     AppEnv.onBeforeUnload(this._onBeforeUnload);
     AppEnv.onReadyToUnload(this._onReadyToUnload);
 
+    AppEnv.config.set('msname', 'mmailsync');
+
     process.nextTick(() => {
       this.ensureClients();
     });
@@ -280,7 +282,8 @@ export default class MailsyncBridge {
     if (verbose) {
       console.warn(`Verbose mailsync logging is enabled until ${new Date(verboseUntil)}`);
     }
-    return { configDirPath, resourcePath, verbose };
+    let msname = AppEnv.config.get('msname', 'mailsync');
+    return { configDirPath, resourcePath, verbose, msname };
   }
 
   async _launchClient(account, { force } = {}) {

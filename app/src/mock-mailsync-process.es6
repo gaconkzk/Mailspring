@@ -71,13 +71,14 @@ export const LocalizedErrorStrings = {
 };
 
 export default class MailsyncProcess extends EventEmitter {
-  constructor({ configDirPath, resourcePath, verbose }) {
+  constructor({ configDirPath, resourcePath, verbose, msname }) {
     super();
     this.verbose = verbose;
     this.resourcePath = resourcePath;
     this.configDirPath = configDirPath;
+    let binname = msname ? msname : 'mailsync';
     // FR#2: this.binaryPath = path.join(resourcePath, 'mailsync').replace('app.asar', 'app.asar.unpacked');
-    this.binaryPath = path.join(resourcePath, 'mmailsync').replace('app.asar', 'app.asar.unpacked');
+    this.binaryPath = path.join(resourcePath, binname).replace('app.asar', 'app.asar.unpacked');
     this._proc = null;
     this._win = null;
 

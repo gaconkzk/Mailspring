@@ -2,26 +2,26 @@
 /* eslint global-require: 0 */
 /* eslint quote-props: 0 */
 const path = require('path');
-const https = require('https');
+// const https = require('https');
 const fs = require('fs');
 const rimraf = require('rimraf');
-const targz = require('targz');
+// const targz = require('targz');
 const { safeExec } = require('./utils/child-process-wrapper.js');
 
-const npmElectronTarget = require('../package.json').devDependencies.electron;
-const npmEnvs = {
+const yarnElectronTarget = require('../package.json').devDependencies.electron;
+const yarnEnvs = {
   system: process.env,
   electron: Object.assign({}, process.env, {
-    npm_config_target: npmElectronTarget,
-    npm_config_arch: process.arch,
-    npm_config_target_arch: process.arch,
-    npm_config_disturl: 'https://atom.io/download/electron',
-    npm_config_runtime: 'electron',
-    npm_config_build_from_source: true,
+    yarn_config_target: yarnElectronTarget,
+    yarn_config_arch: process.arch,
+    yarn_config_target_arch: process.arch,
+    yarn_config_disturl: 'https://atom.io/download/electron',
+    yarn_config_runtime: 'electron',
+    yarn_config_build_from_source: true,
   }),
 };
 
-function npm(cmd, options) {
+function yarn(cmd, options) {
   const { cwd, env } = Object.assign({ cwd: '.', env: 'system' }, options);
 
   return new Promise((resolve, reject) => {
@@ -31,7 +31,7 @@ function npm(cmd, options) {
       `yarn ${cmd}`,
       {
         cwd: path.resolve(__dirname, '..', cwd),
-        env: npmEnvs[env],
+        env: yarnEnvs[env],
       },
       err => {
         return err ? reject(err) : resolve(null);
@@ -41,6 +41,7 @@ function npm(cmd, options) {
 }
 
 function downloadMailsync() {
+  /* I don't need those
   https.get(`https://mailspring-builds.s3.amazonaws.com/stable.txt`, response => {
     let data = '';
     response.on('data', d => {
@@ -94,6 +95,7 @@ function downloadMailsync() {
       });
     });
   });
+  */
 }
 
 // For speed, we cache app/node_modules. However, we need to
@@ -104,21 +106,21 @@ const cacheVersionPath = path.join(appModulesPath, '.postinstall-target-version'
 const cacheElectronTarget =
   fs.existsSync(cacheVersionPath) && fs.readFileSync(cacheVersionPath).toString();
 
-if (cacheElectronTarget !== npmElectronTarget) {
+if (cacheElectronTarget !== yarnElectronTarget) {
   console.log(`\n-- Clearing app/node_modules --`);
   rimraf.sync(appModulesPath);
 }
 
-// run `yarn install` in ./app with Electron NPM config
-npm('install', { cwd: './app', env: 'electron' }).then(() => {
+// run `yarn install` in ./app with Electron yarn config
+yarn('install', { cwd: './app', env: 'electron' }).then(() => {
   // run `yarn list` in ./app - detects missing peer dependencies, etc.
-  npm('list', { cwd: './app', env: 'electron' }).then(() => {
+  yarn('list', { cwd: './app', env: 'electron' }).then(() => {
     // write the marker with the electron version
-    fs.writeFileSync(cacheVersionPath, npmElectronTarget);
+    fs.writeFileSync(cacheVersionPath, yarnElectronTarget);
 
     // if the user hasn't cloned the private mailsync module, download
     // the binary for their operating system that was shipped to S3.
-    if (!fs.existsSync('./mailsync/build.sh')) {
+    if (!fs.existsSync('./mmailsync/Cargo.toml')) {
       console.log(`\n-- Downloading the last released version of Mailspring mailsync --`);
       downloadMailsync();
     }
