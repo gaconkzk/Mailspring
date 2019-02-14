@@ -72,3 +72,6 @@ client_secret.json
 **.bin
 **.tar.gz
 /app/mailsync.dSYM
+
+/app/mmailsync
+/mmailsync/*
