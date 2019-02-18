@@ -6,15 +6,29 @@ use std::sync::atomic::Ordering::SeqCst;
 use serde_json::Value;
 
 pub struct MMailSync {
+    current_step: i8,
     account: Option<String>,
     identity: Option<String>,
 }
 
-use crate::models::Account;
+use crate::common::*;
+use serde_json::Error;
+
+fn json_arr_2(json_arr: &Value) -> Vec<String> {
+    json_arr
+        .as_array()
+        .unwrap_or(&Vec::new())
+        .iter()
+        .map(|x| x.as_str())
+        .map( |x| x.unwrap_or(""))
+        .map(String::from)
+        .collect()
+}
 
 impl MMailSync {
     pub fn new() -> MMailSync {
         MMailSync{
+            current_step: 0,
             account: None,
             identity: None,
         }
@@ -26,48 +40,42 @@ impl MMailSync {
         set_handler(move || {
             r.store(false, SeqCst);
         }).expect("Error setting Ctrl-C handler");
-        //
-        println!("Waiting for Account JSON:");
-        stdout().flush();
         while running.load(SeqCst) {
+            self.pre_process();
             let mut input = String::new();
             stdin().read_line(&mut input);
             self.process(input);
         }
     }
-    fn process(&self, input: String) {
-        let json: Value = serde_json::from_str(input.as_str()).expect("Error parsing account JSON");
-        match &json["__cls"] {
-            Value::String(className) => {
-                // store the acc
-                let acc = Account {
-                    id : String::from("test"),
-                };
-                println!("do something with {}", className);
+    fn pre_process(&self) {
+        match self.current_step {
+            0 => {
+                println!("Waiting for Account JSON:");
                 stdout().flush();
             },
-            _=> {},
+            1 => {
+                println!("Waiting for Identity JSON:");
+                stdout().flush();
+            },
+            _ => {},
         }
-//        // process input
-//        match &self.account {
-//            None => {
-//                print!("Waiting for Account JSON:");
-//                stdout().flush();
-//
-//                print!("{:?}", json);
-//            },
-//            Some(acc) => {
-//                match &self.identity {
-//                    None => {
-//                        print!("Waiting for Identity JSON:");
-//                        stdout().flush();
-//                    },
-//                    Some(identity) => {
-//                        print!(",");
-//                        stdout().flush();
-//                    }
-//                }
-//            }
-//        }
+    }
+    fn process_account(&mut self, input: String) {
+        let acc: Account = serde_json::from_str(input.as_str()).expect("Error parsing Account JSON");
+        self.current_step = 1;
+        stdout().flush();
+    }
+    fn process_identity(&mut self, input: String) {
+        let id:Identity = serde_json::from_str(input.as_str()).expect("Error parsing Identity JSON");
+        self.current_step = 2;
+        stdout().flush();
+    }
+    fn process(&mut self, input: String) {
+        // processing base on current step
+        match self.current_step {
+            0 => self.process_account(input),
+            1 => self.process_identity(input),
+            _ => println!("Not support current step: {}", self.current_step),
+        };
     }
 }

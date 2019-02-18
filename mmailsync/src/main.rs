@@ -1,18 +1,20 @@
 use std::env;
-use serde_json::json;
-use serde::{ Serialize, Deserialize };
+use std::io::{Read, Write};
+use std::io::Error;
 use std::io::stdin;
 use std::io::stdout;
-use std::io::{ Write, Read };
-use std::io::Error;
-use clap::{ Arg, App, SubCommand };
-use clap::{ crate_authors, crate_description, crate_version };
+
+use clap::{App, Arg, SubCommand};
+use clap::{crate_authors, crate_description, crate_version};
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+
 use mmailsync::core::MMailSync;
 
 #[derive(Serialize, Deserialize)]
 struct SyncModel {
     #[serde(rename = "type")]
-    model_type: String,
+    type_: String,
     #[serde(rename = "modelJSONs")]
     model_json: Vec<String>,
     #[serde(rename = "modelClass")]

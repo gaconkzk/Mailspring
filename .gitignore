@@ -75,3 +75,4 @@ client_secret.json
 /app/mmailsync.dSYM
 /app/mmailsync.dSYM.zip
 /app/mmailsync
+/app/*mmailsync*
