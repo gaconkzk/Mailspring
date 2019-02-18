@@ -1,18 +1,22 @@
-use std::io::{ stdin, stdout, Read, Write };
-use std::sync::atomic::AtomicBool;
+use std::io::{Read, stdin, stdout, Write};
 use std::sync::Arc;
-use ctrlc::set_handler;
+use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::SeqCst;
+use std::thread;
+use std::time::Duration;
+
+use ctrlc::set_handler;
+use serde_json::Error;
 use serde_json::Value;
 
+use crate::common::*;
+
+#[derive(Clone)]
 pub struct MMailSync {
     current_step: i8,
     account: Option<String>,
     identity: Option<String>,
 }
-
-use crate::common::*;
-use serde_json::Error;
 
 fn json_arr_2(json_arr: &Value) -> Vec<String> {
     json_arr
@@ -40,12 +44,28 @@ impl MMailSync {
         set_handler(move || {
             r.store(false, SeqCst);
         }).expect("Error setting Ctrl-C handler");
-        while running.load(SeqCst) {
-            self.pre_process();
-            let mut input = String::new();
-            stdin().read_line(&mut input);
-            self.process(input);
-        }
+        //
+        let s_clone = self.clone();
+        let r = running.clone();
+        let syncer = thread::spawn(move || {
+            // Handling stdin input
+            while r.load(SeqCst) {
+                thread::sleep(Duration::from_secs(5));
+            }
+        });
+        let mut s_clone = self.clone();
+        let r = running.clone();
+        let processor = thread::spawn(move || {
+            // Handling stdin input
+            while r.load(SeqCst) {
+                s_clone.pre_process();
+                let mut input = String::new();
+                stdin().read_line(&mut input);
+                s_clone.process(input);
+            }
+        });
+        syncer.join().unwrap();
+        processor.join().unwrap();
     }
     fn pre_process(&self) {
         match self.current_step {

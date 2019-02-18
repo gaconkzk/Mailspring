@@ -409,6 +409,8 @@ export default class MailsyncBridge {
       if (!modelJSONs || !type || !modelClass) {
         console.log(`Sync worker sent a JSON formatted message with unexpected keys: ${msg}`);
         continue;
+      } else {
+        console.log(`Json message from mailsync server: ${JSON.stringify(json, null, 2)}`);
       }
 
       // dispatch the message to other windows
