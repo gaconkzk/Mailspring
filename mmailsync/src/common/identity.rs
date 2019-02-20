@@ -1,5 +1,5 @@
 use serde::{ Serialize, Deserialize };
-use crate::common::*;
+use crate::common::FeatureUsage;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Identity {

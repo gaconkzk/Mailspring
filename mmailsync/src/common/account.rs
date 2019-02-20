@@ -1,6 +1,6 @@
 use serde::{ Serialize, Deserialize };
-use crate::common::Settings;
-use crate::common::Address;
+use super::Settings;
+use super::Address;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Account {

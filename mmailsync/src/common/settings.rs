@@ -1,14 +1,9 @@
 use serde::{ Serialize, Deserialize };
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct MailProtocol {
-    pub allow_insecure_ssl: bool,
-    pub host: String,
-    pub password: String,
-    pub port: u16,
-    pub security: String,
-    pub username: String,
-}
+pub use self::mail_client::MailClient;
+pub use self::mail_client::MailProtocolType;
+
+pub mod mail_client;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Settings {

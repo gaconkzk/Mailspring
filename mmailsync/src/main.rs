@@ -55,6 +55,6 @@ fn main() {
             let mut ms = MMailSync::new();
             ms.start(account);
         },
-        other => print!("{}", json!({"msg": "Unknown mode"}).to_string()),
+        _other => print!("{}", json!({"msg": "Unknown mode"}).to_string()),
     };
 }
