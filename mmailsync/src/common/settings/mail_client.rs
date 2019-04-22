@@ -107,22 +107,13 @@ impl Error for ImapError {
     }
 }
 
-#[macro_use]
 impl Display for ImapError {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match *self {
-            ImapError::Connect { ref cause } => pflush!("Connect failed: {}", cause),
-            ImapError::Login { ref cause } => pflush!("Login failed: {}", cause),
-            ImapError::Select { ref cause } => pflush!("Mailbox selection failed: {}", cause),
-            ImapError::UidFetch { ref cause } => pflush!("Fetching messages failed: {}", cause),
+            ImapError::Connect { ref cause } => write!(f, "Connect failed: {}", cause),
+            ImapError::Login { ref cause } => write!(f, "Login failed: {}", cause),
+            ImapError::Select { ref cause } => write!(f, "Mailbox selection failed: {}", cause),
+            ImapError::UidFetch { ref cause } => write!(f, "Fetching messages failed: {}", cause),
         }
     }
-}
-
-macro_rules! pflush {
-    () => (print!("\n"));
-    ($($arg:tt)*) => ({
-        std::io::_print(format_args_nl!($($arg)*));
-        std::io::stdout().flush().unwrap();
-    })
 }

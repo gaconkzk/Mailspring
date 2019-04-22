@@ -4,3 +4,4 @@
 **/*.iml
 .rustc_info.json
 libmmailsync.rlib
+Cargo.lock
