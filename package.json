@@ -60,6 +60,7 @@
     "chalk": "1.x.x",
     "devtron": "^1.4.0",
     "electron": "4.1.4",
+    "electron-builder": "^20.39.0",
     "electron-installer-dmg": "0.2.x",
     "electron-packager": "13.0.x",
     "electron-winstaller": "2.x.x",
@@ -98,6 +99,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.js",
+    "e:rebuild": "node_modules/.bin/electron-builder",
     "start": "node_modules/.bin/electron ./app --enable-logging --dev",
     "lint": "grunt lint --gruntfile=app/build/Gruntfile.js --base=./",
     "test": "node_modules/.bin/electron ./app --enable-logging --test",

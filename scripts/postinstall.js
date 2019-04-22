@@ -113,16 +113,20 @@ if (cacheElectronTarget !== yarnElectronTarget) {
 
 // run `yarn install` in ./app with Electron yarn config
 yarn('install', { cwd: './app', env: 'electron' }).then(() => {
-  // run `yarn list` in ./app - detects missing peer dependencies, etc.
-  yarn('list', { cwd: './app', env: 'electron' }).then(() => {
-    // write the marker with the electron version
-    fs.writeFileSync(cacheVersionPath, yarnElectronTarget);
+  const platform = process.platform;
+  const arch = process.arch;
+  yarn(`e:rebuild --project ./app --${platform} --${arch}  install-app-deps`).then(() => {
+    // run `yarn list` in ./app - detects missing peer dependencies, etc.
+    yarn('list', { cwd: './app', env: 'electron' }).then(() => {
+      // write the marker with the electron version
+      fs.writeFileSync(cacheVersionPath, yarnElectronTarget);
 
-    // if the user hasn't cloned the private mailsync module, download
-    // the binary for their operating system that was shipped to S3.
-    if (!fs.existsSync('./mmailsync/Cargo.toml')) {
-      console.log(`\n-- Downloading the last released version of Mailspring mailsync --`);
-      downloadMailsync();
-    }
+      // if the user hasn't cloned the private mailsync module, download
+      // the binary for their operating system that was shipped to S3.
+      if (!fs.existsSync('./mmailsync/Cargo.toml')) {
+        console.log(`\n-- Downloading the last released version of Mailspring mailsync --`);
+        downloadMailsync();
+      }
+    });
   });
 });
